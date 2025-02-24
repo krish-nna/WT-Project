@@ -1,13 +1,19 @@
 <?php
+error_log("Starting index.php");
+
 // Include the database configuration
 require_once 'db_config.php';
+error_log("Database configuration included");
 
 // Fetch data from the database
 try {
-    $stmt = $conn->prepare("SELECT * FROM stdata"); // Fetch all students
+    error_log("Attempting to fetch data from the database");
+    $stmt = $conn->prepare("SELECT * FROM stdata");
     $stmt->execute();
     $students = $stmt->fetchAll();
+    error_log("Data fetched successfully");
 } catch (PDOException $e) {
+    error_log("Database error: " . $e->getMessage());
     die("Database error: " . $e->getMessage());
 }
 ?>
@@ -32,7 +38,7 @@ try {
 
     <div class="nav-bar">
       <nav>
-        <a class="home" href="index.php">Home</a> <!-- Updated to index.php -->
+        <a class="home" href="index.php">Home</a>
       </nav>
     </div>
   </header>
