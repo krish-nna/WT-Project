@@ -1,3 +1,16 @@
+<?php
+// Include the database configuration
+require_once 'db_config.php';
+
+// Fetch data from the database
+try {
+    $stmt = $conn->prepare("SELECT * FROM stdata"); // Fetch all students
+    $stmt->execute();
+    $students = $stmt->fetchAll();
+} catch (PDOException $e) {
+    die("Database error: " . $e->getMessage());
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,9 +32,8 @@
 
     <div class="nav-bar">
       <nav>
-        <a class="home" href="index2.html">Home</a>
+        <a class="home" href="index.php">Home</a> <!-- Updated to index.php -->
       </nav>
-     
     </div>
   </header>
 
@@ -47,10 +59,18 @@
     <div class="competition-dashboard">
       <h2>Competition Dashboard</h2>
       <div class="category-tiles" id="categoryTiles">
-        <!-- Competition Tiles Will Be Generated Here.
-             Each tile should include a button like:
-             <button class="view-comp-btn" data-comp-id="COMP_ID">View Competition</button>
-             that links to student.html?compId=COMP_ID -->
+        <?php if (empty($students)): ?>
+          <p>No students found.</p>
+        <?php else: ?>
+          <ul>
+            <?php foreach ($students as $student): ?>
+              <li>
+                <?php echo htmlspecialchars($student['name']); ?> - 
+                <?php echo htmlspecialchars($student['class']); ?>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        <?php endif; ?>
       </div>
     </div>
 

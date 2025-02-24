@@ -1,20 +1,31 @@
 <?php
-$database_url = getenv("DATABASE_PUBLIC_URL"); // Full connection string (optional)
+// Get environment variables
+$host = getenv('PGHOST');
+$dbname = getenv('PGDATABASE');
+$user = getenv('PGUSER');
+$password = getenv('PGPASSWORD');
+$port = getenv('PGPORT');
 
-$host     = getenv("PGHOST");
-$dbname   = getenv("PGDATABASE");
-$user     = getenv("PGUSER");
-$password = getenv("PGPASSWORD");
-$port     = getenv("PGPORT");
+// Log the environment variables for debugging
+error_log("PGHOST: " . $host);
+error_log("PGDATABASE: " . $dbname);
+error_log("PGUSER: " . $user);
+error_log("PGPASSWORD: " . $password);
+error_log("PGPORT: " . $port);
 
-// Option 1: Use individual variables to construct the connection string:
-$conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
+// Validate environment variables
+if (!$host || !$dbname || !$user || !$password || !$port) {
+    die("Database configuration is missing. Please check your environment variables.");
+}
 
-// Option 2: Alternatively, if your DATABASE_PUBLIC_URL is set properly, you could simply use:
-// $conn = pg_connect($database_url);
-
-if (!$conn) {
-    die("Database connection failed: " . pg_last_error());
+// Create a PDO connection
+try {
+    $conn = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+    error_log("Database connection successful!");
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
 }
 ?>
-

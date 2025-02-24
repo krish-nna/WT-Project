@@ -1,0 +1,50 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CompLog - Login</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+  <header>
+    <div class="top-row">
+      <div class="logo">
+        <img src="logo1.png" alt="Logo" style="border-radius: 10px;">
+      </div>
+      <div>
+        <img class="dpu" src="dpu.png" alt="Logo" style="border-radius: 10px;">
+      </div>
+    </div>
+
+    <div class="nav-bar">
+      <nav>
+        <a href="index2.html">Home</a>
+        <a href="student.html">Students</a>
+        <a href="login.html">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+      <form id="login-form">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+        <button class="lbtn" type="submit">Login</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="login.js" defer></script>
+</body>
+
+</html>
