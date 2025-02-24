@@ -7,11 +7,11 @@ $password = getenv('PGPASSWORD');
 $port = getenv('PGPORT');
 
 // Log the environment variables for debugging
-error_log("PGHOST: " . $host);
-error_log("PGDATABASE: " . $dbname);
-error_log("PGUSER: " . $user);
-error_log("PGPASSWORD: " . $password);
-error_log("PGPORT: " . $port);
+error_log("PGHOST: " . ($host ? $host : "NOT SET"));
+error_log("PGDATABASE: " . ($dbname ? $dbname : "NOT SET"));
+error_log("PGUSER: " . ($user ? $user : "NOT SET"));
+error_log("PGPASSWORD: " . ($password ? "***" : "NOT SET")); // Mask password for security
+error_log("PGPORT: " . ($port ? $port : "NOT SET"));
 
 // Validate environment variables
 if (!$host || !$dbname || !$user || !$password || !$port) {
