@@ -71,12 +71,12 @@ for ($i = 1; $i < count($data); $i++) {
     }
 
     // Extract data from the row; Excel columns in order:
-    // sid, sname, class, phno, division, rollno, email, rank_status
-    list($sid, $sname, $class, $phno, $division, $rollno, $email, $rawRankStatus) = $row;
+    // student_id, name, class, phno, division, rollno, email, rank_status
+    list($student_id, $name, $class, $phno, $division, $rollno, $email, $rawRankStatus) = $row;
 
     // Validate required fields except rank_status.
     // For rank_status, allow a value of 0. Check explicitly for null or empty string.
-    if (empty($sid) || empty($sname) || empty($class) || empty($phno) || empty($division) || empty($rollno) || empty($email) ||
+    if (empty($student_id) || empty($name) || empty($class) || empty($phno) || empty($division) || empty($rollno) || empty($email) ||
         ($rawRankStatus === null || $rawRankStatus === "")) {
         $allValid = false;
         $errorMessage = "Missing data at row " . ($i + 1);
@@ -91,15 +91,15 @@ for ($i = 1; $i < count($data); $i++) {
     }
 
     // Convert data types and sanitize if needed
-    $sid = intval($sid);
+    $student_id = intval($student_id);
     $rollno = intval($rollno);
     // Convert rank_status to string (as the enum expects string values)
     $rank_status = strval($rawRankStatus);
 
     // Prepare the SQL query for insertion
-    $query = "INSERT INTO stdata (sid, sname, class, phno, division, rollno, email, rank_status, id) 
+    $query = "INSERT INTO stdata (student_id, name, class, phno, division, rollno, email, rank_status, id) 
               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
-    $params = [$sid, $sname, $class, $phno, $division, $rollno, $email, $rank_status, $competition_id];
+    $params = [$student_id, $name, $class, $phno, $division, $rollno, $email, $rank_status, $competition_id];
 
     // Execute the query using prepared statements
     $result = pg_query_params($conn, $query, $params);

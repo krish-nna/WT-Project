@@ -1,10 +1,15 @@
 <?php
+// Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
+// Set the response content type to JSON
+header('Content-Type: application/json');
 
 // Include database configuration file
 require 'db_config.php';
 
+// Connect to the PostgreSQL database
 $conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
 if (!$conn) {
@@ -48,12 +53,17 @@ if (!$result) {
     exit;
 }
 
+// Fetch all rows as an associative array
 $students = pg_fetch_all($result);
-if (!$students) {
+
+// Handle empty result set
+if ($students === false) {
     $students = []; // Ensure JSON response always contains an array
 }
 
+// Return JSON response
 echo json_encode(["success" => true, "students" => $students]);
 
+// Close the database connection
 pg_close($conn);
 ?>

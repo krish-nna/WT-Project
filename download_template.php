@@ -10,8 +10,8 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
 // Updated headers to include student_id
-// Columns: student_id, sname, class, phno, division, rollno, email, rank_status
-$headers = ['student_id', 'sname', 'class', 'phno', 'division', 'rollno', 'email', 'rank_status'];
+// Columns: student_id, name, class, phno, division, rollno, email, rank_status
+$headers = ['student_id', 'name', 'class', 'phno', 'division', 'rollno', 'email', 'rank_status'];
 $col = 'A';
 foreach ($headers as $header) {
     $sheet->setCellValue($col . '1', $header);

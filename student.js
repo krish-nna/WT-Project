@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tile.classList.add("tile");
             tile.innerHTML = `
                 <div class="student-card">
-                    <p class="student-name"><u>${student.sname}</u></p>
+                    <p class="student-name"><u>${student.name}</u></p>
                     <p class="student-id"><strong>Student ID:</strong> ${student.student_id}</p>
                     <p class="student-class"><strong>Class:</strong> ${student.class}</p>
                     <p class="student-division"><strong>Division:</strong> ${student.division}</p>
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Extract fields using unique class selectors
-        const snameEl = tile.querySelector(".student-name");
+        const nameEl = tile.querySelector(".student-name");
         const classEl = tile.querySelector(".student-class");
         const divisionEl = tile.querySelector(".student-division");
         const rollnoEl = tile.querySelector(".student-rollno");
@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const phoneEl = tile.querySelector(".student-phone");
         const rankEl = tile.querySelector("span.rank-badge");
 
-        const sname = snameEl ? snameEl.textContent.replace(/<[^>]*>/g, "").trim() : "";
+        const name = nameEl ? nameEl.textContent.replace(/<[^>]*>/g, "").trim() : "";
         const classText = classEl ? classEl.textContent.split(": ")[1] : "";
         const divisionText = divisionEl ? divisionEl.textContent.split(": ")[1] : "";
         const rollnoText = rollnoEl ? rollnoEl.textContent.split(": ")[1] : "";
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const phoneText = phoneEl ? phoneEl.textContent.split(": ")[1] : "";
         const rank_status = rankEl ? rankEl.textContent : "";
 
-        if (!sname || !classText || !divisionText || !rollnoText || !email || !phoneText) {
+        if (!name || !classText || !divisionText || !rollnoText || !email || !phoneText) {
             console.error("Some student details are missing!");
             return;
         }
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <h3>Edit Student</h3>
                 <form id="edit-form">
                     <input type="hidden" name="tid" value="${tid}">
-                    <label>Name: <input type="text" name="sname" value="${sname}" required></label>
+                    <label>Name: <input type="text" name="name" value="${name}" required></label>
                     <label>Class: <input type="text" name="class" value="${classText}" required></label>
                     <label>Division: <input type="text" name="division" value="${divisionText}" required></label>
                     <label>Roll No: <input type="number" name="rollno" value="${rollnoText}" required></label>
@@ -202,36 +202,55 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Handle form submission (update)
-        modal.querySelector("#edit-form").addEventListener("submit", function (ev) {
-            ev.preventDefault();
-            const formData = new FormData(this);
-            fetch("update_students.php", {
-                method: "POST",
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        modal.remove();
-                        fetchStudents();
-                    } else {
-                        showError(data.error);
-                    }
-                })
-                .catch(() => showError("Error updating student"));
+   // Handle form submission (update)
+modal.querySelector("#edit-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    console.log("Edit form submitted"); // Debug log
+    const formData = new FormData(this);
+    console.log("FormData:", formData); // Debug log
+    fetch("update_students.php", {
+        method: "POST",
+        body: formData
+    })
+        .then(response => {
+            console.log("Update response:", response); // Debug log
+            return response.json();
+        })
+        .then(data => {
+            console.log("Update data:", data); // Debug log
+            if (data.success) {
+                modal.remove();
+                fetchStudents();
+            } else {
+                showError(data.error);
+            }
+        })
+        .catch(err => {
+            console.error("Update error:", err); // Debug log
+            showError("Error updating student");
         });
+});
 
         // Handle deletion
         modal.querySelector("#delete-btn").addEventListener("click", function () {
+            console.log("Delete button clicked");
+            console.log("TID to delete:", tid);
+        
             if (confirm("Are you sure you want to delete this student?")) {
                 const formData = new FormData();
                 formData.append("tid", tid);
+                console.log("Delete FormData:", formData);
+        
                 fetch("delete_students.php", {
                     method: "POST",
                     body: formData
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log("Delete response:", response);
+                        return response.json();
+                    })
                     .then(data => {
+                        console.log("Delete data:", data);
                         if (data.success) {
                             modal.remove();
                             fetchStudents();
@@ -239,7 +258,10 @@ document.addEventListener("DOMContentLoaded", () => {
                             showError(data.error);
                         }
                     })
-                    .catch(() => showError("Error deleting student"));
+                    .catch(err => {
+                        console.error("Delete error:", err);
+                        showError("Error deleting student");
+                    });
             }
         });
     }
